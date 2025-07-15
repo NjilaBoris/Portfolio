@@ -3,7 +3,12 @@ import React, { useState } from "react";
 import Container from "../Container";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+} from "motion/react";
 
 const Navbar = () => {
   const navItems = [
@@ -15,6 +20,8 @@ const Navbar = () => {
   const [hovered, setHovered] = useState<number | null>(null);
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState<boolean>(false);
+  const y = useTransform(scrollY, [0, 100], [0, 10]);
+  const width = useTransform(scrollY, [0, 100], ["60%", "40%"]);
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 20) {
       setScrolled(true);
@@ -25,10 +32,11 @@ const Navbar = () => {
   return (
     <Container className="relative">
       <motion.nav
-        className="flex !px-4 !py-2 bg-white dark:bg-black items-center justify-between rounded-full !p-2 fixed  top-0 inset-x-0 !mx-auto max-w-4xl"
-        animate={{
+        className="flex z-10 !px-4 !py-2 bg-white dark:bg-black items-center justify-between rounded-full !p-2 fixed  top-0 inset-x-0 !mx-auto max-w-4xl"
+        style={{
           boxShadow: scrolled ? "var(--shadow-aceternity)" : "none",
-          width: scrolled ? "50%" : "100%",
+          width,
+          y,
           marginTop: "0.9rem",
         }}
         transition={{
